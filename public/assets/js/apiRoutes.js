@@ -1,5 +1,6 @@
 
 const fs = require("fs");
+const dataBase = require("../../../db/db.json")
 
 module.exports = function (app) {
   app.get("/api/notes", function (req, res) {
@@ -10,8 +11,8 @@ module.exports = function (app) {
       if (error) {
         return console.log(error);
       }
-      console.log("Notes", data);
-      res.json(JSON.parse(data));
+      console.log("Notes", dataBase);
+      res.json(JSON.parse(dataBase));
     });
   });
 
