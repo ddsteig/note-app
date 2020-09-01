@@ -23,8 +23,7 @@ module.exports = function (app) {
       let noteId = savedNote.length.toString();
       newNote.id = noteId;
     });
-    console.log(savedNote);
-
+    
     fs.writeFile("db/db.json", JSON.stringify(savedNote), function (error) {
       if (error) {
         throw error;
