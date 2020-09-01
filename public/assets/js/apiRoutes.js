@@ -1,41 +1,53 @@
-const fs = require("fs");
-const dataBase = require("../../../db/db.json");
+// Dependencies
 
+const fs = require("fs");
+const path = require("path");
+const savedNote = JSON.parse(fs.readFileSync("db/db.json", "utf8"));
+
+// Exports Api routes to the app.js
 
 module.exports = function (app) {
-  let savedNotes = JSON.parse(fs.readFileSync("db/db.json", "utf8"));
+
+  // Responds the database to the page
+
   app.get("/api/notes", function (req, res) {
-    res.json(dataBase);
+    res.json(savedNote);
   });
 
-  app.get("/api/notes/:id", function (req, res) {
-    let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-    res.json(savedNotes[Number(req.params.id)]);
-  });
+  // Posts a new note to the database with an id
 
   app.post("/api/notes", function (req, res) {
-    
     let newNote = req.body;
-    let uniqueID = savedNotes.length.toString();
-    newNote.id = uniqueID;
-    savedNotes.push(newNote);
+    savedNote.push(newNote);
+    savedNote.forEach((element) => {
+      let noteId = savedNote.length.toString();
+      newNote.id = noteId;
+    });
+    console.log(savedNote);
 
-    fs.writeFile("db/db.json", JSON.stringify(savedNotes), function (error) {
+    fs.writeFile("db/db.json", JSON.stringify(savedNote), function (error) {
       if (error) {
         throw error;
       }
-      res.json(savedNotes);
-    })
+      res.json(savedNote);
+    });
   });
+
+  // Deletes a note by way of the note's id
 
   app.delete("/api/notes/:id", function (req, res) {
-    savedNotes.splice(req.params.id, 1);
-    fs.writeFile("db/db.json", JSON.stringify(savedNotes), function (error) {
+    let noteId = req.params;
+    for (let i = 0; i < savedNote.length; i++) {
+      if (savedNote[i].id === noteId.id) {
+        savedNote.splice(i, 1);
+      }
+    }
+
+    fs.writeFile("db/db.json", JSON.stringify(savedNote), function (error) {
       if (error) {
         throw error;
       }
-    })
+      res.json(savedNote);
+    });
   });
-
-  
 };

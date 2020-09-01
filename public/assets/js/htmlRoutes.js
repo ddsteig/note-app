@@ -1,4 +1,8 @@
+// Dependencies
+
 const path = require("path");
+
+// Exports html routes to the app.js
 
 module.exports = function (app) {
   app.get("/notes", function (req, res) {
